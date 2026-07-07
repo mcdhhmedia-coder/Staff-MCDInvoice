@@ -1,0 +1,253 @@
+/* =========================
+   1. BASE RESET
+========================= */
+* {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+/* =========================
+   2. PAGE BASE STYLE (SCREEN)
+========================= */
+body {
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    background: #eef0f3;
+    margin: 0;
+    padding: 20px;
+    color: #222;
+}
+
+/* =========================
+   3. INVOICE PAGE CONTAINER
+========================= */
+.invoice-page {
+    width: 8.5in;
+    min-height: 11in;
+    margin: 20px auto;
+    background: #fff;
+    padding: 0.6in 0.7in;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================
+   4. HEADER
+========================= */
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 22px;
+    color: #004D14;
+}
+
+.header p {
+    margin-top: 5px;
+    color: #004D14;
+}
+
+/* =========================
+   5. INPUTS (CLEAN INVOICE STYLE)
+========================= */
+input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    font: inherit;
+    background: transparent;
+    color: inherit;
+    padding: 0;
+}
+
+input:focus {
+    outline: 2px solid #4a90e2;
+    outline-offset: 1px;
+}
+
+/* Remove number spinners */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* =========================
+   6. TABLE BASE SYSTEM
+========================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+td,
+th {
+    padding: 6px;
+    vertical-align: middle;
+}
+
+tr {
+    height: 32px;
+}
+
+/* =========================
+   7. INFO GRID (TOP SECTION)
+========================= */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.requester-info {
+    grid-column: 1;
+}
+
+.info-grid table:nth-child(3) {
+    grid-column: 2;
+}
+
+.info-grid table {
+    border: 1px solid #b5b5b5;
+    background: #fff;
+}
+
+.info-grid th {
+    background: #004D14;
+    color: #fff;
+    border: 1px solid #b5b5b5;
+    text-align: center;
+    padding: 6px;
+}
+
+.info-grid td {
+    border: 1px solid #b5b5b5;
+}
+
+.info-grid td:first-child {
+    background: #f9f9f9;
+    font-weight: 500;
+}
+
+/* =========================
+   8. SERVICE TABLE
+========================= */
+.service-table th {
+    background: #004D14;
+    color: #fff;
+    border: 1px solid #b5b5b5;
+    text-align: center;
+}
+
+.service-table td {
+    border: 1px solid #b5b5b5;
+}
+
+/* Description column */
+.service-table td:first-child input {
+    text-align: left;
+}
+
+/* Qty, Rate, Total columns */
+.service-table td:nth-child(n + 2) input {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* =========================
+   9. TOTAL SECTION
+========================= */
+#grandTotal {
+    font-weight: 700;
+    text-align: right !important;
+    background: #f5f5f5;
+}
+
+/* =========================
+   10. BUTTONS
+========================= */
+.actions {
+    margin-top: 15px;
+    text-align: right;
+}
+
+#downloadPdfBtn,
+#resetBtn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#downloadPdfBtn {
+    background: #004D14;
+    color: #fff;
+}
+
+#downloadPdfBtn:hover {
+    opacity: 0.9;
+}
+
+#resetBtn {
+    margin-left: 8px;
+    background: #004D14;
+    color: #fff;
+}
+
+#resetBtn:hover {
+    opacity: 0.9;
+}
+
+/* Keyboard accessibility */
+#downloadPdfBtn:focus,
+#resetBtn:focus {
+    outline: 2px solid #2b7cff;
+    outline-offset: 2px;
+}
+
+/* =========================
+   11. PRINT MODE
+========================= */
+@media print {
+
+    body {
+        background: #fff !important;
+        padding: 0 !important;
+    }
+
+    .invoice-page {
+        width: 100% !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .actions {
+        display: none !important;
+    }
+
+    input {
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+}
