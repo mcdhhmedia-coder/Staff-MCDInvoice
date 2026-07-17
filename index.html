@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Provider Communication Invoice Form</title>
+
+  <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+  <form class="invoice-page" aria-label="Staff Provider Communication Invoice Form" autocomplete="off">
+
+    <!-- Header -->
+    <header class="header">
+      <h1>Staff CART Captioner and Interpreter</h1>
+      <p>Service has been rendered</p>
+    </header>
+
+    <main>
+
+      <!-- Information Tables -->
+<section class="info-grid" aria-label="Invoice Information">
+
+  <!-- Assignment Information -->
+  <table aria-label="Assignment Information">
+    <colgroup>
+      <col style="width:30%;">
+      <col style="width:70%;">
+    </colgroup>
+
+    <thead>
+      <tr>
+        <th colspan="2">Assignment Information</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td><label for="providerName">Provider</label></td>
+        <td><input id="providerName" name="providerName"></td>
+      </tr>
+
+      <tr>
+        <td><label for="requestId">Request ID</label></td>
+        <td><input id="requestId" name="requestId"></td>
+      </tr>
+
+      <tr>
+        <td><label for="requestorName">Requestor</label></td>
+        <td><input id="requestorName" name="requestorName"></td>
+      </tr>
+
+      <tr>
+        <td><label for="requestorEmail">Requestor's Email</label></td>
+        <td>
+          <input
+            id="requestorEmail"
+            name="requestorEmail"
+            type="email">
+        </td>
+      </tr>
+
+      <tr>
+        <td><label for="requestorAddress">Address</label></td>
+        <td><input id="requestorAddress" name="requestorAddress"></td>
+      </tr>
+
+      <tr>
+        <td><label for="serviceDate">Service Date</label></td>
+        <td>
+          <input
+            id="serviceDate"
+            type="date"
+            name="serviceDate">
+        </td>
+      </tr>
+
+      <tr>
+        <td><label for="startTime">Start Time</label></td>
+        <td>
+          <input
+            id="startTime"
+            type="time"
+            name="startTime">
+        </td>
+      </tr>
+
+      <tr>
+        <td><label for="endTime">End Time</label></td>
+        <td>
+          <input
+            id="endTime"
+            type="time"
+            name="endTime">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Billing Information -->
+  <table aria-label="Billing Information">
+    <colgroup>
+      <col style="width:30%;">
+      <col style="width:70%;">
+    </colgroup>
+
+    <thead>
+      <tr>
+        <th colspan="2">Billing Information</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td><label for="billingName">Name</label></td>
+        <td><input id="billingName" name="billingName"></td>
+      </tr>
+
+      <tr>
+        <td><label for="billingCompany">Company</label></td>
+        <td><input id="billingCompany" name="billingCompany"></td>
+      </tr>
+
+      <tr>
+        <td><label for="billingAddress">Address</label></td>
+        <td><input id="billingAddress" name="billingAddress"></td>
+      </tr>
+
+      <tr>
+        <td><label for="billingEmail">Email</label></td>
+        <td>
+          <input
+            id="billingEmail"
+            name="billingEmail"
+            type="email">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</section>
+
+      <!-- Service Table -->
+      <section aria-label="Service Details">
+        <table class="service-table">
+          <colgroup>
+            <col style="width:55%;">
+            <col style="width:15%;">
+            <col style="width:15%;">
+            <col style="width:15%;">
+          </colgroup>
+
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Qty</th>
+              <th>Rate</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+
+          <tbody id="invoiceBody">
+
+            <!-- Fixed Rows -->
+            <tr data-type="provider">
+              <td>Communication Provider</td>
+              <td><input type="number" class="qty" name="providerQty" aria-label="Communication Provider Quantity"></td>
+              <td><input type="number" class="provider-rate" name="providerRate" aria-label="Communication Provider Rate"></td>
+              <td><input type="text" class="total" readonly aria-label="Communication Provider Total"></td>
+            </tr>
+
+            <tr data-type="standard">
+              <td>Onsite</td>
+              <td><input type="number" class="qty" name="onsiteQty" aria-label="Onsite Quantity"></td>
+              <td><input type="number" class="rate" name="onsiteRate" aria-label="Onsite Rate"></td>
+              <td><input type="text" class="total" readonly aria-label="Onsite Total"></td>
+            </tr>
+
+            <tr data-type="standard">
+              <td>Miles</td>
+              <td><input type="number" class="qty" name="milesQty" aria-label="Miles Quantity"></td>
+              <td><input type="number" class="rate" name="milesRate" aria-label="Miles Rate"></td>
+              <td><input type="text" class="total" readonly aria-label="Miles Total"></td>
+            </tr>
+
+            <!-- Travel Formula Row - Leave Unchanged -->
+            <tr data-type="travel">
+              <td>Travel</td>
+              <td><input type="number" class="miles" name="travelMiles" aria-label="Travel Miles"></td>
+              <td><input type="text" value="Auto" disabled aria-label="Travel Rate Calculated Automatically"></td>
+              <td><input type="text" class="total" readonly aria-label="Travel Total"></td>
+            </tr>
+
+            <!-- Additional Description Rows -->
+            <tr data-type="standard">
+              <td><input type="text" name="desc1" aria-label="Description 1"></td>
+              <td><input type="number" class="qty" name="qty1" aria-label="Quantity 1"></td>
+              <td><input type="number" class="rate" name="rate1" aria-label="Rate 1"></td>
+              <td><input type="text" class="total" readonly aria-label="Total 1"></td>
+            </tr>
+
+            <tr data-type="standard">
+              <td><input type="text" name="desc2" aria-label="Description 2"></td>
+              <td><input type="number" class="qty" name="qty2" aria-label="Quantity 2"></td>
+              <td><input type="number" class="rate" name="rate2" aria-label="Rate 2"></td>
+              <td><input type="text" class="total" readonly aria-label="Total 2"></td>
+            </tr>
+
+            <tr data-type="standard">
+              <td><input type="text" name="desc3" aria-label="Description 3"></td>
+              <td><input type="number" class="qty" name="qty3" aria-label="Quantity 3"></td>
+              <td><input type="number" class="rate" name="rate3" aria-label="Rate 3"></td>
+              <td><input type="text" class="total" readonly aria-label="Total 3"></td>
+            </tr>
+
+            <tr data-type="standard">
+              <td><input type="text" name="desc4" aria-label="Description 4"></td>
+              <td><input type="number" class="qty" name="qty4" aria-label="Quantity 4"></td>
+              <td><input type="number" class="rate" name="rate4" aria-label="Rate 4"></td>
+              <td><input type="text" class="total" readonly aria-label="Total 4"></td>
+            </tr>
+
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <td></td>
+              <td></td>
+              <td><strong>Grand Total</strong></td>
+              <td id="grandTotal">$0.00</td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+    </main>
+
+    <!-- Action Buttons -->
+    <footer class="actions">
+      <button type="button" id="downloadPdfBtn">Download PDF</button>
+      <button type="button" id="resetBtn">Reset Invoice</button>
+    </footer>
+
+  </form>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="calculation.js"></script>
+  <script src="pdf.js"></script>
+</body>
+</html>

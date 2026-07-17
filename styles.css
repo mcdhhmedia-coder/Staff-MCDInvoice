@@ -1,0 +1,209 @@
+/* =========================
+   Global Reset
+========================= */
+* {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+/* =========================
+   Base Elements
+========================= */
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: #222;
+    background: #eef0f3;
+}
+
+input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    background: transparent;
+}
+
+input:focus,
+#downloadPdfBtn:focus,
+#resetBtn:focus {
+    outline: 2px solid #2b7cff;
+    outline-offset: 2px;
+}
+
+/* Remove number spinners */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* =========================
+   Invoice Page
+========================= */
+.invoice-page {
+    width: 8.5in;
+    min-height: 11in;
+    margin: 20px auto;
+    padding: 0.6in 0.7in;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================
+   Tables
+========================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+th,
+td {
+    padding: 6px;
+    vertical-align: middle;
+}
+
+tr {
+    height: 32px;
+}
+
+/* =========================
+   Header
+========================= */
+.header {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 22px;
+    color: #004D14;
+}
+
+.header p {
+    margin-top: 5px;
+    color: #004D14;
+}
+
+/* =========================
+   Information Grid
+========================= */
+.info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.info-grid table {
+    background: #fff;
+    border: 1px solid #b5b5b5;
+}
+
+.info-grid th,
+.service-table th {
+    background: #004D14;
+    color: #fff;
+    text-align: center;
+    border: 1px solid #b5b5b5;
+}
+
+.info-grid td,
+.service-table td {
+    border: 1px solid #b5b5b5;
+}
+
+.info-grid td:first-child {
+    background: #f9f9f9;
+    font-weight: 500;
+}
+
+/* =========================
+   Service Table Alignment
+========================= */
+.service-table td:first-child input {
+    text-align: left;
+}
+
+.service-table td:nth-child(n + 2) input {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* =========================
+   Grand Total
+========================= */
+#grandTotal {
+    font-weight: 700;
+    text-align: right !important;
+    background: #f5f5f5;
+}
+
+/* =========================
+   Buttons
+========================= */
+.actions {
+    margin-top: 15px;
+    text-align: right;
+}
+
+#downloadPdfBtn,
+#resetBtn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background: #004D14;
+    color: #fff;
+    font: inherit;
+    cursor: pointer;
+}
+
+#resetBtn {
+    margin-left: 8px;
+}
+
+#downloadPdfBtn:hover,
+#resetBtn:hover {
+    opacity: 0.9;
+}
+
+/* =========================
+   Print
+========================= */
+@media print {
+    body {
+        background: #fff !important;
+        padding: 0 !important;
+    }
+
+    .invoice-page {
+        width: 100% !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .actions {
+        display: none !important;
+    }
+
+    input {
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+}
