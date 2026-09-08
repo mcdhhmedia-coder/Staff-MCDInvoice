@@ -23,7 +23,7 @@ const INFO_ROW_H = 22;
 const TABLE_ROW_H = 24;
 const START_X = 40;
 const TABLE_WIDTH = 532;
-const LOGO_SIZE = 45;
+const LOGO_SIZE = 60;
 
 /* =========================
    HELPERS
@@ -185,7 +185,7 @@ async function downloadPDF() {
 
   pdf.setTextColor(...COLORS.green);
 
-  setFont(pdf, "normal", 22);
+  setFont(pdf, "normal", 18);
   pdf.text(
     "Staff CART Captioner and Interpreter",
     PAGE_CENTER,
