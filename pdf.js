@@ -23,12 +23,13 @@ const INFO_ROW_H = 22;
 const TABLE_ROW_H = 24;
 const START_X = 40;
 const TABLE_WIDTH = 532;
+const LOGO_SIZE = 45;
 
 /* =========================
    HELPERS
 ========================= */
 
-const toNumber = v => parseFloat(v) || 0;
+const toNumber = value => parseFloat(value) || 0;
 const getVal = id => document.getElementById(id)?.value || "";
 
 const formatMoney = value =>
@@ -47,6 +48,7 @@ function drawCell(pdf, x, y, w, h, fill = null) {
     pdf.setFillColor(...fill);
     pdf.rect(x, y, w, h, "F");
   }
+
   pdf.rect(x, y, w, h);
 }
 
@@ -57,13 +59,14 @@ function drawRightText(pdf, text, x, width, y) {
 }
 
 function drawRowCells(pdf, columns, y, height, fill = null) {
-  columns.forEach(col => {
-    drawCell(pdf, col.x, y, col.w, height, fill);
+  columns.forEach(column => {
+    drawCell(pdf, column.x, y, column.w, height, fill);
   });
 }
 
 function getRowDescription(tr) {
   const input = tr.cells[0].querySelector("input");
+
   return input
     ? input.value.trim()
     : tr.cells[0].textContent.trim();
@@ -75,16 +78,50 @@ function getRowQty(tr) {
 
 function getRowRate(tr) {
   return (
-    tr.querySelector(".provider-rate")?.value ||
+    tr.querySelector(".base-rate")?.value ||
     tr.querySelector(".rate")?.value ||
     "Auto"
   );
 }
 
 function getRowTotal(tr) {
-  return toNumber(
-    tr.querySelector(".total")?.value
-  );
+  return toNumber(tr.querySelector(".total")?.value);
+}
+
+function imageToDataUrl(image) {
+  return new Promise((resolve, reject) => {
+    if (!image) {
+      reject(new Error("Invoice logo was not found."));
+      return;
+    }
+
+    const convert = () => {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
+
+        const context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0);
+
+        resolve(canvas.toDataURL("image/png"));
+      } catch (error) {
+        reject(error);
+      }
+    };
+
+    if (image.complete && image.naturalWidth > 0) {
+      convert();
+      return;
+    }
+
+    image.addEventListener("load", convert, { once: true });
+    image.addEventListener(
+      "error",
+      () => reject(new Error("Invoice logo could not be loaded.")),
+      { once: true }
+    );
+  });
 }
 
 /* =========================
@@ -99,51 +136,28 @@ function drawInfoTable(pdf, title, rows, y) {
 
   pdf.setFillColor(...COLORS.green);
   pdf.setTextColor(255, 255, 255);
-
   pdf.rect(x, y, totalW, INFO_ROW_H, "F");
 
   setFont(pdf, "bold", 10);
 
-  pdf.text(
-    title,
-    x + totalW / 2,
-    y + 15,
-    { align: "center" }
-  );
+  pdf.text(title, x + totalW / 2, y + 15, {
+    align: "center"
+  });
 
   y += INFO_ROW_H;
-
   pdf.setTextColor(...COLORS.text);
 
   rows.forEach(([label, value]) => {
     pdf.setDrawColor(...COLORS.border);
 
-    drawCell(
-      pdf,
-      x,
-      y,
-      labelW,
-      INFO_ROW_H,
-      COLORS.labelBg
-    );
-
-    drawCell(
-      pdf,
-      x + labelW,
-      y,
-      valueW,
-      INFO_ROW_H
-    );
+    drawCell(pdf, x, y, labelW, INFO_ROW_H, COLORS.labelBg);
+    drawCell(pdf, x + labelW, y, valueW, INFO_ROW_H);
 
     setFont(pdf, "bold", 9);
     pdf.text(label, x + 6, y + 15);
 
     setFont(pdf, "normal", 9);
-    pdf.text(
-      String(value ?? ""),
-      x + labelW + 6,
-      y + 15
-    );
+    pdf.text(String(value ?? ""), x + labelW + 6, y + 15);
 
     y += INFO_ROW_H;
   });
@@ -155,10 +169,19 @@ function drawInfoTable(pdf, title, rows, y) {
    MAIN
 ========================= */
 
-function downloadPDF() {
+async function downloadPDF() {
   const pdf = new jsPDF(PDF_CONFIG);
+  const logo = document.getElementById("invoiceLogo");
 
   let y = PAGE_MARGIN;
+
+  // Add the Massachusetts logo from the same folder as index.html.
+  try {
+    const logoData = await imageToDataUrl(logo);
+    pdf.addImage(logoData, "PNG", PAGE_MARGIN, y - 12, LOGO_SIZE, LOGO_SIZE);
+  } catch (error) {
+    console.warn("PDF logo could not be added:", error);
+  }
 
   pdf.setTextColor(...COLORS.green);
 
@@ -174,14 +197,13 @@ function downloadPDF() {
 
   setFont(pdf, "normal", 12);
   pdf.text(
-    "Service has been rendered",
+    "Submission of this invoice confirms that the services have been rendered",
     PAGE_CENTER,
     y,
     { align: "center" }
   );
 
   y += 35;
-
   pdf.setTextColor(...COLORS.text);
 
   y = drawInfoTable(
@@ -227,126 +249,62 @@ function downloadPDF() {
   pdf.setFillColor(...COLORS.green);
   pdf.setTextColor(255, 255, 255);
 
-  drawRowCells(
-    pdf,
-    columns,
-    y,
-    TABLE_ROW_H,
-    COLORS.green
-  );
+  drawRowCells(pdf, columns, y, TABLE_ROW_H, COLORS.green);
 
   setFont(pdf, "bold", 10);
 
-  pdf.text(
-    "Description",
-    columns[0].x + c1 / 2,
-    y + 16,
-    { align: "center" }
-  );
+  pdf.text("Description", columns[0].x + c1 / 2, y + 16, {
+    align: "center"
+  });
 
-  pdf.text(
-    "Qty",
-    columns[1].x + c2 / 2,
-    y + 16,
-    { align: "center" }
-  );
+  pdf.text("Qty", columns[1].x + c2 / 2, y + 16, {
+    align: "center"
+  });
 
-  pdf.text(
-    "Rate",
-    columns[2].x + c3 / 2,
-    y + 16,
-    { align: "center" }
-  );
+  pdf.text("Rate", columns[2].x + c3 / 2, y + 16, {
+    align: "center"
+  });
 
-  pdf.text(
-    "Total",
-    columns[3].x + c4 / 2,
-    y + 16,
-    { align: "center" }
-  );
+  pdf.text("Total", columns[3].x + c4 / 2, y + 16, {
+    align: "center"
+  });
 
   y += TABLE_ROW_H;
-
   pdf.setTextColor(...COLORS.text);
   setFont(pdf, "normal", 10);
 
   let grand = 0;
 
-  document
-    .querySelectorAll("#invoiceBody tr")
-    .forEach(tr => {
-      const desc = getRowDescription(tr);
-      const qty = getRowQty(tr);
-      const rate = getRowRate(tr);
-      const total = getRowTotal(tr);
+  document.querySelectorAll("#invoiceBody tr").forEach(tr => {
+    const desc = getRowDescription(tr);
+    const qty = getRowQty(tr);
+    const rate = getRowRate(tr);
+    const total = getRowTotal(tr);
 
-      grand += total;
+    grand += total;
+    pdf.setDrawColor(...COLORS.border);
 
-      pdf.setDrawColor(...COLORS.border);
+    drawRowCells(pdf, columns, y, TABLE_ROW_H);
 
-      drawRowCells(
-        pdf,
-        columns,
-        y,
-        TABLE_ROW_H
-      );
+    pdf.text(desc, columns[0].x + 6, y + 16);
+    drawRightText(pdf, qty, columns[1].x, c2, y);
+    drawRightText(pdf, rate, columns[2].x, c3, y);
+    drawRightText(
+      pdf,
+      total ? total.toFixed(2) : "",
+      columns[3].x,
+      c4,
+      y
+    );
 
-      pdf.text(
-        desc,
-        columns[0].x + 6,
-        y + 16
-      );
+    y += TABLE_ROW_H;
+  });
 
-      drawRightText(
-        pdf,
-        qty,
-        columns[1].x,
-        c2,
-        y
-      );
-
-      drawRightText(
-        pdf,
-        rate,
-        columns[2].x,
-        c3,
-        y
-      );
-
-      drawRightText(
-        pdf,
-        total ? total.toFixed(2) : "",
-        columns[3].x,
-        c4,
-        y
-      );
-
-      y += TABLE_ROW_H;
-    });
-
-  drawCell(
-    pdf,
-    START_X,
-    y,
-    c1 + c2 + c3,
-    TABLE_ROW_H
-  );
-
-  drawCell(
-    pdf,
-    columns[3].x,
-    y,
-    c4,
-    TABLE_ROW_H
-  );
+  drawCell(pdf, START_X, y, c1 + c2 + c3, TABLE_ROW_H);
+  drawCell(pdf, columns[3].x, y, c4, TABLE_ROW_H);
 
   setFont(pdf, "bold", 10);
-
-  pdf.text(
-    "Grand Total",
-    START_X + 6,
-    y + 16
-  );
+  pdf.text("Grand Total", START_X + 6, y + 16);
 
   drawRightText(
     pdf,
@@ -363,16 +321,10 @@ function downloadPDF() {
    BUTTON
 ========================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
-    document
-      .getElementById("downloadPdfBtn")
-      ?.addEventListener(
-        "click",
-        downloadPDF
-      );
-  }
-);
+document.addEventListener("DOMContentLoaded", () => {
+  document
+    .getElementById("downloadPdfBtn")
+    ?.addEventListener("click", downloadPDF);
+});
 
 window.downloadPDF = downloadPDF;
