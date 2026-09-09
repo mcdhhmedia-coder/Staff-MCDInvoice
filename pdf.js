@@ -204,6 +204,17 @@ async function downloadPDF() {
   );
 
   y += 35;
+
+  setFont(pdf, "normal", 12);
+  pdf.text(
+    "Billing to MCDHHAR@mass.gov",
+    PAGE_CENTER,
+    y,
+    { align: "center" }
+  );
+
+  y += 35;
+   
   pdf.setTextColor(...COLORS.text);
 
   y = drawInfoTable(
